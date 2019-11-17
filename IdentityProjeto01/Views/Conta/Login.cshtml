@@ -1,0 +1,21 @@
+﻿@model IdentityProjeto01.ViewModels.ContaLoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    @Html.EditorForModel()
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Fazer Login" class="btn btn-default" />
+        </div>
+    </div>
+}

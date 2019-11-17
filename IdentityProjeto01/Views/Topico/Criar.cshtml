@@ -1,0 +1,19 @@
+﻿@model IdentityProjeto01.ViewModels.TopicoCriarViewModel
+
+@{
+    ViewBag.Title = "Criar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Criar</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    @Html.EditorForModel()
+
+    <br />
+
+    <input type="submit" value="Criar Tópico" />
+}
