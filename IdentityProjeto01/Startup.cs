@@ -50,13 +50,23 @@ namespace IdentityProjeto01
                      userManager.EmailService = new EmailServico();
 
                      var dataProtectionProvider = opcoes.DataProtectionProvider;
-                     var dataProtectionProviderCreated =  dataProtectionProvider.Create("IdentityProjeto01");
+                     var dataProtectionProviderCreated = dataProtectionProvider.Create("IdentityProjeto01");
                      userManager.UserTokenProvider = new DataProtectorTokenProvider<UsuarioAplicacao>(dataProtectionProviderCreated);
 
                      return userManager;
                  });
 
+            builder.CreatePerOwinContext<SignInManager<UsuarioAplicacao, string>>(
+                
+                (opcoes, contextoOwin) =>
+                 {
+                     var userManager = contextoOwin.Get<UserManager<UsuarioAplicacao>>();
 
+                     var signInManager = new SignInManager<UsuarioAplicacao, string>(
+                         userManager, contextoOwin.Authentication);
+
+                     return signInManager;
+                 });
         }
     }
 }

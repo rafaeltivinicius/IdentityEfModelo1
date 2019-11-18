@@ -28,6 +28,24 @@ namespace IdentityProjeto01.Controllers
             }
         }
 
+        private SignInManager<UsuarioAplicacao, string> _singInManager;
+        public SignInManager<UsuarioAplicacao, string> SingInManage
+        {
+            get
+            {
+                if (_userManager == null)
+                {
+                    var contextOwin = HttpContext.GetOwinContext();
+                    _singInManager = contextOwin.GetUserManager<SignInManager<UsuarioAplicacao, string>>();
+                }
+                return _singInManager;
+            }
+            set
+            {
+                _singInManager = value;
+            }
+        }
+
         public ActionResult Registrar()
         {
             return View();
@@ -128,10 +146,27 @@ namespace IdentityProjeto01.Controllers
         {
             if (ModelState.IsValid)
             {
+                var usuario = await UserManager.FindByEmailAsync(model.Email);
 
+                if (usuario == null)
+                    return SenhaOuUsuarioInvalido();
+
+                var singInResult = await SingInManage.PasswordSignInAsync(usuario.UserName, model.Senha, isPersistent: false, shouldLockout: false);
+
+                switch (singInResult)
+                {
+                    case SignInStatus.Success: return RedirectToAction("Index", "Home"); break;
+                    default: SenhaOuUsuarioInvalido(); break;
+                }
             }
 
-            return View();
+            return View(model);
+        }
+
+        private ActionResult SenhaOuUsuarioInvalido()
+        {
+            ModelState.AddModelError("", "Credencias Invalidas");
+            return View("Login");
         }
     }
 }
