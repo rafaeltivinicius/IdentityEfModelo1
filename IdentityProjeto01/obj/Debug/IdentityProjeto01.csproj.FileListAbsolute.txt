@@ -465,7 +465,7 @@ C:\Projetos\IdentityEfModelo\IdentityProjeto01\bin\System.Web.WebPages.Razor.xml
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\bin\Newtonsoft.Json.xml
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\bin\Antlr3.Runtime.pdb
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Projetos\IdentityEfModelo\IdentityProjeto01\obj\Debug\IdentityProjeto01.csprojAssemblyReference.cache
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\obj\Debug\IdentityProjeto01.csproj.CopyComplete
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\obj\Debug\IdentityProjeto01.dll
 C:\Projetos\IdentityEfModelo\IdentityProjeto01\obj\Debug\IdentityProjeto01.pdb
+C:\Projetos\IdentityEfModelo\IdentityProjeto01\obj\Debug\IdentityProjeto01.csprojAssemblyReference.cache

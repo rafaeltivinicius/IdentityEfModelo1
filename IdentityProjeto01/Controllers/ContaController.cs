@@ -2,6 +2,7 @@
 using IdentityProjeto01.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -29,11 +30,11 @@ namespace IdentityProjeto01.Controllers
         }
 
         private SignInManager<UsuarioAplicacao, string> _singInManager;
-        public SignInManager<UsuarioAplicacao, string> SingInManage
+        public SignInManager<UsuarioAplicacao, string> SignInManager
         {
             get
             {
-                if (_userManager == null)
+                if (_singInManager == null)
                 {
                     var contextOwin = HttpContext.GetOwinContext();
                     _singInManager = contextOwin.GetUserManager<SignInManager<UsuarioAplicacao, string>>();
@@ -44,6 +45,11 @@ namespace IdentityProjeto01.Controllers
             {
                 _singInManager = value;
             }
+        }
+
+        public IAuthenticationManager authenticationManager
+        {
+            get { var contextoOwin = Request.GetOwinContext(); return contextoOwin.Authentication; }
         }
 
         public ActionResult Registrar()
@@ -151,16 +157,23 @@ namespace IdentityProjeto01.Controllers
                 if (usuario == null)
                     return SenhaOuUsuarioInvalido();
 
-                var singInResult = await SingInManage.PasswordSignInAsync(usuario.UserName, model.Senha, isPersistent: false, shouldLockout: false);
+                var singInResult = await SignInManager.PasswordSignInAsync(
+                            usuario.UserName, model.Senha, isPersistent: model.ContinuarLogado, shouldLockout: false);
 
                 switch (singInResult)
                 {
-                    case SignInStatus.Success: return RedirectToAction("Index", "Home"); break;
-                    default: SenhaOuUsuarioInvalido(); break;
+                    case SignInStatus.Success: return RedirectToAction("Index", "Home");
+                    default: return SenhaOuUsuarioInvalido();
                 }
             }
-
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Logoff()
+        {
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
         }
 
         private ActionResult SenhaOuUsuarioInvalido()

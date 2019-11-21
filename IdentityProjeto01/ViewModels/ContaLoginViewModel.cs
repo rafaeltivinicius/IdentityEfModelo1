@@ -10,5 +10,7 @@ namespace IdentityProjeto01.ViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Senha { get; set; }
+        [Display(Name ="Continuar Logado")]
+        public bool ContinuarLogado { get; set; }
     }
 }

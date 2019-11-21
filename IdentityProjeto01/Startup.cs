@@ -6,6 +6,7 @@ using Owin;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity.Owin; //adicionar manualmente - Get
 using IdentityProjeto01.App_Start.Identity;
+using Microsoft.Owin.Security.Cookies;
 
 [assembly: OwinStartup(typeof(IdentityProjeto01.Startup))]
 namespace IdentityProjeto01
@@ -57,16 +58,21 @@ namespace IdentityProjeto01
                  });
 
             builder.CreatePerOwinContext<SignInManager<UsuarioAplicacao, string>>(
-                
                 (opcoes, contextoOwin) =>
-                 {
-                     var userManager = contextoOwin.Get<UserManager<UsuarioAplicacao>>();
+                {
+                    var userManager = contextoOwin.Get<UserManager<UsuarioAplicacao>>();
+                    var signInManager =
+                        new SignInManager<UsuarioAplicacao, string>(
+                            userManager,
+                            contextoOwin.Authentication);
 
-                     var signInManager = new SignInManager<UsuarioAplicacao, string>(
-                         userManager, contextoOwin.Authentication);
+                    return signInManager;
+                });
 
-                     return signInManager;
-                 });
+            builder.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
+            });
         }
     }
 }
