@@ -154,15 +154,19 @@ namespace IdentityProjeto01.Controllers
             {
                 var usuario = await UserManager.FindByEmailAsync(model.Email);
 
-                if (usuario == null)
+                if (usuario == null || usuario.EmailConfirmed == false)
                     return SenhaOuUsuarioInvalido();
 
                 var singInResult = await SignInManager.PasswordSignInAsync(
-                            usuario.UserName, model.Senha, isPersistent: model.ContinuarLogado, shouldLockout: false);
+                            usuario.UserName, model.Senha, isPersistent: model.ContinuarLogado, shouldLockout: true);
 
                 switch (singInResult)
                 {
                     case SignInStatus.Success: return RedirectToAction("Index", "Home");
+                    case SignInStatus.LockedOut:
+                        var senhaCorreta = await UserManager.CheckPasswordAsync(usuario, model.Senha);
+                        if (senhaCorreta) { ModelState.AddModelError("", "Conta Bloqueada"); break; }
+                        ModelState.AddModelError("", "As Credenciais estão invalias!"); break;
                     default: return SenhaOuUsuarioInvalido();
                 }
             }

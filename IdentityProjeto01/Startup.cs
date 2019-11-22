@@ -7,6 +7,7 @@ using System.Data.Entity;
 using Microsoft.AspNet.Identity.Owin; //adicionar manualmente - Get
 using IdentityProjeto01.App_Start.Identity;
 using Microsoft.Owin.Security.Cookies;
+using System;
 
 [assembly: OwinStartup(typeof(IdentityProjeto01.Startup))]
 namespace IdentityProjeto01
@@ -53,6 +54,9 @@ namespace IdentityProjeto01
                      var dataProtectionProvider = opcoes.DataProtectionProvider;
                      var dataProtectionProviderCreated = dataProtectionProvider.Create("IdentityProjeto01");
                      userManager.UserTokenProvider = new DataProtectorTokenProvider<UsuarioAplicacao>(dataProtectionProviderCreated);
+
+                     userManager.MaxFailedAccessAttemptsBeforeLockout = 3;
+                     userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
 
                      return userManager;
                  });
