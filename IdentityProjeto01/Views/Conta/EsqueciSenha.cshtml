@@ -1,0 +1,18 @@
+﻿@model IdentityProjeto01.ViewModels.ContaEsqueciSenhaViewModel
+@{
+    ViewBag.Title = "EsqueciSenha";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Esqueci Senha</h2>
+<p>
+    Preencha o campo de email com seu endereço de email cadastrado no forum, e enviaremos a instruções.
+
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+
+        @Html.EditorForModel()
+
+        <input type="submit" value="Enviar" class="btn btn-default" />
+    }

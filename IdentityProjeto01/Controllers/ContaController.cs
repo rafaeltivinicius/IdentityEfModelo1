@@ -180,6 +180,37 @@ namespace IdentityProjeto01.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public ActionResult EsqueciSenha()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EsqueciSenha(ContaEsqueciSenhaViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var usuario = await UserManager.FindByEmailAsync(model.Email);
+
+                if (usuario != null)
+                {
+                    var token = await UserManager.GeneratePasswordResetTokenAsync(usuario.Id);
+
+                    var linkDeCallback = Url.Action("ConfirmacaoAlteracaoSenha", "Conta", new { usuarioId = usuario.Id, token = token }, Request.Url.Scheme);
+
+                    await UserManager.SendEmailAsync(usuario.Id, "Projeto Teste Identity - Confirmação de Email",
+                     $"Redefinição de senha, clique aqui {linkDeCallback} para confirmar seu email!");
+                }
+
+                return View("ConfirmacaoSenha");
+
+            }
+
+            return View();
+        }
+
         private ActionResult SenhaOuUsuarioInvalido()
         {
             ModelState.AddModelError("", "Credencias Invalidas");
