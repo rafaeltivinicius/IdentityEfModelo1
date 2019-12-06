@@ -55,8 +55,10 @@ namespace IdentityProjeto01
                      var dataProtectionProviderCreated = dataProtectionProvider.Create("IdentityProjeto01");
                      userManager.UserTokenProvider = new DataProtectorTokenProvider<UsuarioAplicacao>(dataProtectionProviderCreated);
 
+                     //proteje contra ataque de força bruta
                      userManager.MaxFailedAccessAttemptsBeforeLockout = 3;
                      userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                     userManager.UserLockoutEnabledByDefault = true;
 
                      return userManager;
                  });
