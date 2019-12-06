@@ -189,7 +189,6 @@ namespace IdentityProjeto01.Controllers
         [HttpPost]
         public async Task<ActionResult> EsqueciSenha(ContaEsqueciSenhaViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 var usuario = await UserManager.FindByEmailAsync(model.Email);
@@ -200,12 +199,40 @@ namespace IdentityProjeto01.Controllers
 
                     var linkDeCallback = Url.Action("ConfirmacaoAlteracaoSenha", "Conta", new { usuarioId = usuario.Id, token = token }, Request.Url.Scheme);
 
-                    await UserManager.SendEmailAsync(usuario.Id, "Projeto Teste Identity - Confirmação de Email",
-                     $"Redefinição de senha, clique aqui {linkDeCallback} para confirmar seu email!");
+                    await UserManager.SendEmailAsync(usuario.Id, "Projeto Teste Identity - Alteração de senha",
+                     $"Redefinição de senha, clique aqui {linkDeCallback}!");
                 }
 
-                return View("ConfirmacaoSenha");
+                return View("EmailAlteracaoSenhaEnviado");
+            }
 
+            return View();
+        }
+
+       
+        public ActionResult ConfirmacaoAlteracaoSenha(string usuarioId, string token)
+        {
+            var modelo = new ConfirmacaoAlteracaoSenhaViewModel
+            {
+                UsuarioId = usuarioId,
+                Token = token
+            };
+
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ConfirmacaoAlteracaoSenha(ConfirmacaoAlteracaoSenhaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+               var result = await UserManager.ResetPasswordAsync(model.UsuarioId, model.Token, model.NovaSenha);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                AdicionaErros(result);
             }
 
             return View();

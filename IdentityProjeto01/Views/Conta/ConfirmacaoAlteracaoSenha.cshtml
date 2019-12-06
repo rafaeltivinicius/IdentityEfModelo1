@@ -1,0 +1,19 @@
+﻿@model IdentityProjeto01.ViewModels.ConfirmacaoAlteracaoSenhaViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Confirmação alteração senha</h2>
+
+@using (Html.BeginForm("ConfirmacaoAlteracaoSenha","Conta"))
+{
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    @Html.EditorForModel()
+
+
+    <input type="submit" value="Alterar Senha" class="btn btn-default" />
+
+}
